@@ -1,0 +1,13 @@
+Cycle de vue d'une requête au sein d'API Platform
+
+HTTP Request
+   ↓
+Symfony Kernel
+   ↓
+API Platform (Router)
+   ↓
+Provider (Doctrine)
+   ↓
+Serializer
+   ↓
+HTTP Response (JSON)
