@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -52,9 +55,20 @@ class Book
     #[Groups(['book:read'])]
     private \DateTimeInterface $publishedAt;
 
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    #[Groups(['book:read', 'book:write'])]
+    #[ApiProperty(readableLink: true)]
+    private ?Author $author = null;
+
+    #[ORM\ManyToMany(targetEntity: Category::class)]
+    #[ORM\JoinTable(name: 'book_category')]
+    #[Groups(['book:read', 'book:write'])]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +107,32 @@ class Book
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): Book
+    {
+        $this->author = $author;
+        return $this;
+    }
+
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): void
+    {
+        $this->categories->add($category);
+    }
+
+    public function removeCategory(Category $category): void
+    {
+        $this->categories->removeElement($category);
     }
 }
 
