@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
@@ -24,26 +25,37 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(uriTemplate: '/library/books/{id}'),
         new Patch(uriTemplate: '/library/books/{id}'),
         new Delete(uriTemplate: '/library/books/{id}')
-    ]
+    ],
+    normalizationContext: ['groups' => ['book:read']],
+    denormalizationContext: ['groups' => ['book:write']]
 )]
 class Book
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['book:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
+    #[Groups(['book:read', 'book:write'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
+    #[Groups(['book:read', 'book:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $publishedAt = null;
+    #[Groups(['book:read'])]
+    private \DateTimeInterface $publishedAt;
+
+    public function __construct()
+    {
+        $this->publishedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -81,12 +93,6 @@ class Book
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
-    }
-
-    public function setPublishedAt(?\DateTimeInterface $publishedAt): Book
-    {
-        $this->publishedAt = $publishedAt;
-        return $this;
     }
 }
 
