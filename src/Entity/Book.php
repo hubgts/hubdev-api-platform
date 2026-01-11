@@ -34,10 +34,12 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

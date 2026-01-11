@@ -1,0 +1,8 @@
+JSON reçu
+  ↓
+Désérialisation
+  ↓
+Validation (Symfony Validator)
+  ↓
+❌ Erreurs → réponse 422
+✅ OK → Processor Doctrine
