@@ -3,11 +3,27 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        // admin
+        new GetCollection(uriTemplate: '/admin/books'),
+        // library
+        new GetCollection(uriTemplate: '/library/books'),
+        new Post(uriTemplate: '/library/books'),
+        new Get(uriTemplate: '/library/books/{id}'),
+        new Patch(uriTemplate: '/library/books/{id}'),
+        new Delete(uriTemplate: '/library/books/{id}')
+    ]
+)]
 class Book
 {
     #[ORM\Id]
