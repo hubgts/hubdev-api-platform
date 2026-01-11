@@ -7,6 +7,10 @@ api_platform:
         json: [ 'application/json' ]
         csv: [ 'text/csv' ]
     defaults:
+        pagination_enabled: true
+        pagination_client_items_per_page: true
+        pagination_items_per_page: 20
+        pagination_maximum_items_per_page: 100
         format: jsonld
         stateless: true
         cache_headers:
