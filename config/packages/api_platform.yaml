@@ -1,6 +1,7 @@
 api_platform:
-    title: Hello API Platform
-    version: 1.0.0
+    title: 'API - Librairie'
+    description: 'Beaucoup de livres'
+    version: '1.0.0'
     formats:
         jsonld: [ 'application/ld+json' ]
         json: [ 'application/json' ]
